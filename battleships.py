@@ -10,6 +10,10 @@ class CollisionError(Exception):
   pass
 
 
+class InvalidInputError(Exception):
+  pass
+
+
 class Ship:
   def __init__(self):
     self.size = Null
@@ -19,6 +23,7 @@ class Ship:
 
   def random_orientation():
     return random.choice(['north-south', 'east-west'])
+
 
 class Carrier(Ship):
   def __init__(self):
@@ -66,8 +71,9 @@ class Board():
     print('   A B C D E F G H I J')
     print('  +-------------------+')
     for i, row in enumerate(self.contents):
-      print('{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|'.format(*([str(i+1).rjust(2)] + row)))
+      print('{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}'.format(*([str(i+1).rjust(2)] + row + [str(i+1).rjust(2)])))
     print('  +-------------------+')
+    print('   A B C D E F G H I J')
 
   def random_coord(self):
     row_index = random.choice(range(len(self.contents)))
@@ -75,17 +81,12 @@ class Board():
     column_index = random.choice(range(len(row)))
     return (row_index, row, column_index)
 
-  def place_ship(self, ship):
-    print('placing size: {0.size}'.format(ship))
+  def randomly_place_ship(self, ship):
     try:
       # Randomly choose where to start placing ship and its orientation
       (start_row_index, start_row, start_column_index) = self.random_coord()
       orientation = Ship.random_orientation()
-
-      print("Start co-ords: ({},{}). Oreientation: {}.".format(start_column_index, start_row_index, orientation))
-
       ship_coords = [(start_column_index, start_row_index)]
-
       current_row_index, current_column_index = (start_row_index, start_column_index)
       for x in ['s'] * (ship.size - 1):
         if orientation == 'north-south':
@@ -96,47 +97,99 @@ class Board():
         # Make sure that the next co-ord for the ship does not fall off the board
         if (current_column_index < (self.width - 1)) and (current_row_index < (self.height - 1)):
           # Current co-ord is on the board, so continue
-          print("Current co-ord ({},{}) is on the board, so continue.".format(current_column_index, current_row_index))
           ship_coords.append((current_column_index, current_row_index))
         else:
           # Current co-ord is off the board, so we need to start again
-          print("Current co-ord ({},{}) is OFF the board! We need to try again.".format(current_column_index, current_row_index))
           raise ShipOffBoardError("Current co-ord ({},{}) is OFF the board! We need to try again.".format(current_column_index, current_row_index))
 
-      print("In terms of dimensions, the ship can be placed. Co-ords: {}.".format(ship_coords))
-
       for coord in ship_coords:
-        print('In loop')
         x, y = coord
         if self.contents[x][y] == 's':
           raise CollisionError("There's already a ship at ({},{})".format(x,y))
-        print('Can place at ({},{})'.format(x,y))
         self.contents[x][y] = 's' # Place this co-ord for the ship
 
-      print('Placed!')
     except (ShipOffBoardError, CollisionError) as e:
-      self.place_ship(ship) # Try placing again
+      self.randomly_place_ship(ship) # Try placing again
 
-cpu_board = Board()
-cpu_ships = [
-  Carrier(),
-  Battleship(),
-  Destroyer(),
-  Submarine(), Submarine(),
-  PatrolBoat(), PatrolBoat(),
-]
+  def mark_hit(self, coords):
+    x, y = coords
+    self.contents[y][x] = 'X'
 
-def place_ships(board, ships):
-  for ship in ships:
-    board.place_ship(ship)
+  def get_coords(self, coords):
+    x, y = coords
+    return self.contents[y][x]
 
-def print_ships(ships):
-  for ship in ships:
-      print(ship)
+class Battleships:
+  def col_to_index(self, col):
+    return "ABCDEFGHIJ".find(col)
+
+  def validate_aim(self, aim):
+    if len(aim) != 2:
+      raise InvalidInputError()
+    x, y = self.aim_to_coords(aim)
+    if not ((x >= 0 and x <= 9) and (y >= 0 and y <= 9)):
+      raise InvalidInputError()
+
+  def aim_to_coords(self, aim):
+    x, y = list(aim)
+    x = self.col_to_index(x)
+    y = int(y) - 1
+    return (x, y)
+
+  def request_aim_coords(self):
+    try:
+      aim = input("Please enter co-ordinates where to fire: ").upper()
+      self.validate_aim(aim)
+      return self.aim_to_coords(aim)
+    except InvalidInputError:
+      print('Please enter valid co-ordinates')
+      return self.request_aim_coords()
+
+  def fire(self, board, coords):
+    if board.get_coords(coords) == 's':
+      return 'hit'
+    elif board.get_coords(coords) == 'X':
+      return 'already hit'
+    else:
+      return 'miss'
+
+  def play():
+    game = Battleships()
+
+    cpu_board = Board()
+    cpu_ships = [
+      Carrier(),
+      Battleship(),
+      Destroyer(),
+      Submarine(), Submarine(),
+      PatrolBoat(), PatrolBoat(),
+    ]
+    for ship in cpu_ships:
+      cpu_board.randomly_place_ship(ship)
+
+    print("CPU board:")
+    cpu_board.print()
+
+    print("\nReady to play!")
+
+    ships_remaining = True
+
+    while ships_remaining:
+      aim_coords = game.request_aim_coords()
+      shot_result = game.fire(cpu_board, aim_coords)
+      if shot_result == 'hit':
+        print("It's a hit!")
+        cpu_board.mark_hit(aim_coords)
+      elif shot_result == 'already hit':
+        print("You've already hit there.")
+      else:
+        print("You missed.")
+      print('\n')
+
+      print("CPU board:")
+      cpu_board.print()
+      print("\n")
+
 
 if __name__ == "__main__":
-  # player_board.print()
-  # print_ships(cpu_ships)
-
-  place_ships(cpu_board, cpu_ships)
-  cpu_board.print()
+  Battleships.play()
