@@ -124,7 +124,6 @@ cpu_ships = [
 ]
 
 def place_ships(board, ships):
-  # TODO: Work out how to place ships on the board without collisions
   for ship in ships:
     board.place_ship(ship)
 
