@@ -1,5 +1,15 @@
 import random
 
+# TODO: Remove print()s
+
+class ShipOffBoardError(Exception):
+  pass
+
+
+class CollisionError(Exception):
+  pass
+
+
 class Ship:
   def __init__(self):
     self.size = Null
@@ -66,12 +76,11 @@ class Board():
     return (row_index, row, column_index)
 
   def place_ship(self, ship):
-    print('placing size: {0.size}'.format(ship)) # TODO: Remove
-    placed = False
-    while not placed:
+    print('placing size: {0.size}'.format(ship))
+    try:
       # Randomly choose where to start placing ship
       (start_row_index, start_row, start_column_index) = self.random_coord()
-      print("Start co-ord ({},{}) is on the board, so continue".format(start_column_index, start_row_index)) # TODO: Remove
+      print("Start co-ords: ({},{}).".format(start_column_index, start_row_index))
       # TODO: Support other orientations. Currently only north-south is supported.
 
       ship_coords = [(start_column_index, start_row_index)]
@@ -84,24 +93,26 @@ class Board():
         # Make sure that the next co-ord for the ship does not fall off the board
         if (current_column_index < (self.width - 1)) and (current_row_index < (self.height - 1)):
           # Current co-ord is on the board, so continue
-          print("Current co-ord ({},{}) is on the board, so continue".format(current_column_index, current_row_index))
+          print("Current co-ord ({},{}) is on the board, so continue.".format(current_column_index, current_row_index))
           ship_coords.append((current_column_index, current_row_index))
-          continue
         else:
           # Current co-ord is off the board, so we need to start again
-          print("Current co-ord ({},{}) is OFF the board! We need to try again".format(current_column_index, current_row_index))
-          break # NOTE -> This needs to skip the while, but it's skipping the for ... in
+          print("Current co-ord ({},{}) is OFF the board! We need to try again.".format(current_column_index, current_row_index))
+          raise ShipOffBoardError("Current co-ord ({},{}) is OFF the board! We need to try again.".format(current_column_index, current_row_index))
 
-      placed = True
-      print("The ship can be placed. Co-ords: {}".format(ship_coords))
+      print("In terms of dimensions, the ship can be placed. Co-ords: {}.".format(ship_coords))
 
-      # TODO: Actually place the ship in ship_coords
-      # if self.contents[row_index][column_index] != 's':
-      #   # Can place here
-      # else:
-      #   # Cannot place here
-      #   continue
+      for coord in ship_coords:
+        print('In loop')
+        x, y = coord
+        if self.contents[x][y] == 's':
+          raise CollisionError("There's already a ship at ({},{})".format(x,y))
+        print('Can place at ({},{})'.format(x,y))
+        self.contents[x][y] = 's' # Place this co-ord for the ship
 
+      print('Placed!')
+    except (ShipOffBoardError, CollisionError) as e:
+      self.place_ship(ship) # Try placing again
 
 cpu_board = Board()
 cpu_ships = [
@@ -122,8 +133,8 @@ def print_ships(ships):
       print(ship)
 
 if __name__ == "__main__":
-  # cpu_board.print()
   # player_board.print()
   # print_ships(cpu_ships)
 
   place_ships(cpu_board, cpu_ships)
+  cpu_board.print()
