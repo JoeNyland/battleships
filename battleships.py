@@ -78,17 +78,20 @@ class Board():
   def place_ship(self, ship):
     print('placing size: {0.size}'.format(ship))
     try:
-      # Randomly choose where to start placing ship
+      # Randomly choose where to start placing ship and its orientation
       (start_row_index, start_row, start_column_index) = self.random_coord()
-      print("Start co-ords: ({},{}).".format(start_column_index, start_row_index))
-      # TODO: Support other orientations. Currently only east-west is supported.
+      orientation = Ship.random_orientation()
+
+      print("Start co-ords: ({},{}). Oreientation: {}.".format(start_column_index, start_row_index, orientation))
 
       ship_coords = [(start_column_index, start_row_index)]
 
       current_row_index, current_column_index = (start_row_index, start_column_index)
       for x in ['s'] * (ship.size - 1):
-        current_column_index  = current_column_index
-        current_row_index    += 1
+        if orientation == 'north-south':
+          current_column_index += 1
+        else:
+          current_row_index    += 1
 
         # Make sure that the next co-ord for the ship does not fall off the board
         if (current_column_index < (self.width - 1)) and (current_row_index < (self.height - 1)):
