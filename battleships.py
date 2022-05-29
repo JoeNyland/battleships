@@ -81,7 +81,7 @@ class Board():
       # Randomly choose where to start placing ship
       (start_row_index, start_row, start_column_index) = self.random_coord()
       print("Start co-ords: ({},{}).".format(start_column_index, start_row_index))
-      # TODO: Support other orientations. Currently only north-south is supported.
+      # TODO: Support other orientations. Currently only east-west is supported.
 
       ship_coords = [(start_column_index, start_row_index)]
 
