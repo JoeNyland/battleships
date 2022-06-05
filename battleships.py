@@ -175,25 +175,32 @@ class Battleships:
     print("\nReady to play!")
 
     ships_remaining = True
+    next_turn = 'player'
 
     while ships_remaining:
-      aim_coords = game.request_aim_coords()
-      shot_result = game.fire(cpu_board, aim_coords)
-      if shot_result == 'hit':
-        print("It's a hit!")
-        cpu_board.mark_hit(aim_coords)
-      elif shot_result == 'already hit':
-        print("You've already hit there.")
-      else:
-        print("You missed.")
-      print('\n')
+      if next_turn == 'player':
+        aim_coords = game.request_aim_coords()
+        shot_result = game.fire(cpu_board, aim_coords)
+        if shot_result == 'hit':
+          print("It's a hit!")
+          cpu_board.mark_hit(aim_coords)
+        elif shot_result == 'already hit':
+          print("You've already hit there.")
+        else:
+          print("You missed.")
+        print('\n')
+        next_turn = 'cpu'
 
-      if len(cpu_board.hits) == 24:
-        print('You won!')
-        ships_remaining = False
+        if len(cpu_board.hits) == 24:
+          print('You won!')
+          ships_remaining = False
+        else:
+          print("CPU board:")
+          cpu_board.print()
       else:
-        print("CPU board:")
-        cpu_board.print()
+        x, row, y = cpu_board.random_coord() # TODO: Change to player board
+        print("CPU fires at {}!".format((x,y))) # TODO: Convert X to a alpha character
+        next_turn = 'player'
 
       print("\n")
 
