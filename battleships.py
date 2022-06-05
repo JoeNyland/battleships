@@ -171,6 +171,22 @@ class Battleships:
 
     print("CPU board:")
     cpu_board.print()
+    print("\n")
+
+    player_board = Board()
+    player_ships = [
+      Carrier(),                  # 5 long
+      Battleship(),               # 4 long
+      Destroyer(),                # 3 long
+      Submarine(), Submarine(),   # 3 long
+      PatrolBoat(), PatrolBoat(), # 2 long
+    ]
+    for ship in player_ships:
+      player_board.randomly_place_ship(ship)
+
+    print("Player board:")
+    player_board.print()
+    print("\n")
 
     print("\nReady to play!")
 
@@ -198,7 +214,7 @@ class Battleships:
           print("CPU board:")
           cpu_board.print()
       else:
-        x, row, y = cpu_board.random_coord() # TODO: Change to player board
+        x, row, y = player_board.random_coord()
         print("CPU fires at {}!".format((x,y))) # TODO: Convert X to a alpha character
         next_turn = 'player'
 
