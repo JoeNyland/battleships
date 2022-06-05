@@ -126,6 +126,9 @@ class Battleships:
   def col_to_index(self, col):
     return "ABCDEFGHIJ".find(col)
 
+  def index_to_col(self, index):
+    return "ABCDEFGHIJ"[index]
+
   def validate_aim(self, aim):
     if len(aim) != 2:
       raise InvalidInputError()
@@ -138,6 +141,12 @@ class Battleships:
     x = self.col_to_index(x)
     y = int(y) - 1
     return (x, y)
+
+  def coords_to_aim(self, coords):
+    x, y = coords
+    col = self.index_to_col(x)
+    row = y + 1
+    return "{}{}".format(col, row)
 
   def request_aim_coords(self):
     try:
@@ -216,7 +225,7 @@ class Battleships:
           cpu_board.print()
       else:
         aim_coords = player_board.random_coords()
-        print("CPU fires at {}!".format(aim_coords)) # TODO: Convert X to a alpha character
+        print("CPU fires at {}!".format(game.coords_to_aim(aim_coords)))
         shot_result = game.fire(player_board, aim_coords)
         if shot_result == 'hit':
           print("The CPU hit one of your ships!")
