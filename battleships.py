@@ -66,6 +66,7 @@ class Board():
       [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
       [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ']
     ]
+    self.hits = []
 
   def print(self):
     print('   A B C D E F G H I J')
@@ -114,6 +115,7 @@ class Board():
   def mark_hit(self, coords):
     x, y = coords
     self.contents[y][x] = 'X'
+    self.hits.append((x,y))
 
   def get_coords(self, coords):
     x, y = coords
@@ -186,10 +188,14 @@ class Battleships:
         print("You missed.")
       print('\n')
 
-      print("CPU board:")
-      cpu_board.print()
-      print("\n")
+      if len(cpu_board.hits) == 24:
+        print('You won!')
+        ships_remaining = False
+      else:
+        print("CPU board:")
+        cpu_board.print()
 
+      print("\n")
 
 if __name__ == "__main__":
   Battleships.play()
