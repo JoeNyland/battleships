@@ -76,16 +76,17 @@ class Board():
     print('  +-------------------+')
     print('   A B C D E F G H I J')
 
-  def random_coord(self):
+  def random_coords(self):
     row_index = random.choice(range(len(self.contents)))
     row = self.contents[row_index]
     column_index = random.choice(range(len(row)))
-    return (row_index, row, column_index)
+    return (row_index, column_index)
 
   def randomly_place_ship(self, ship):
     try:
       # Randomly choose where to start placing ship and its orientation
-      (start_row_index, start_row, start_column_index) = self.random_coord()
+      (start_row_index, start_column_index) = self.random_coords()
+      start_row = self.contents[start_row_index]
       orientation = Ship.random_orientation()
       ship_coords = [(start_column_index, start_row_index)]
       current_row_index, current_column_index = (start_row_index, start_column_index)
