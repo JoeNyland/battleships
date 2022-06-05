@@ -158,11 +158,11 @@ class Battleships:
 
     cpu_board = Board()
     cpu_ships = [
-      Carrier(),
-      Battleship(),
-      Destroyer(),
-      Submarine(), Submarine(),
-      PatrolBoat(), PatrolBoat(),
+      Carrier(),                  # 5 long
+      Battleship(),               # 4 long
+      Destroyer(),                # 3 long
+      Submarine(), Submarine(),   # 3 long
+      PatrolBoat(), PatrolBoat(), # 2 long
     ]
     for ship in cpu_ships:
       cpu_board.randomly_place_ship(ship)
