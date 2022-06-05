@@ -215,9 +215,25 @@ class Battleships:
           print("CPU board:")
           cpu_board.print()
       else:
-        x, row, y = player_board.random_coord()
-        print("CPU fires at {}!".format((x,y))) # TODO: Convert X to a alpha character
+        aim_coords = player_board.random_coords()
+        print("CPU fires at {}!".format(aim_coords)) # TODO: Convert X to a alpha character
+        shot_result = game.fire(player_board, aim_coords)
+        if shot_result == 'hit':
+          print("The CPU hit one of your ships!")
+          player_board.mark_hit(aim_coords)
+        elif shot_result == 'already hit':
+          print("The CPU has already hit there.")
+        else:
+          print("The CPU missed.")
+        print('\n')
         next_turn = 'player'
+
+        if len(player_board.hits) == 24:
+          print('You lost!')
+          ships_remaining = False
+        else:
+          print("Player board:")
+          player_board.print()
 
       print("\n")
 
