@@ -1,6 +1,7 @@
 import random
 
 # TODO: Remove print()s
+# TODO: Move classes out into separate files
 
 class ShipOffBoardError(Exception):
   pass
