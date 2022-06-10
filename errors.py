@@ -1,10 +1,10 @@
 class ShipOffBoardError(Exception):
-  pass
+    pass
 
 
 class CollisionError(Exception):
-  pass
+    pass
 
 
 class InvalidInputError(Exception):
-  pass
+    pass
