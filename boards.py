@@ -58,10 +58,12 @@ class Board:
                         "Current co-ord ({},{}) is OFF the board! We need to try again.".format(current_column_index,
                                                                                                 current_row_index))
 
-            for coord in ship_coords:
-                x, y = coord
+            for (x, y) in ship_coords:
                 if self.contents[x][y] == 's':
                     raise CollisionError("There's already a ship at ({},{})".format(x, y))
+
+            # If there were no collisions above, we can now place the ship
+            for (x, y) in ship_coords:
                 self.contents[x][y] = 's'  # Place this co-ord for the ship
 
         except (ShipOffBoardError, CollisionError):
