@@ -105,7 +105,7 @@ class Battleships:
                 print('\n')
                 next_turn = 'cpu'
 
-                if len(cpu_board.hits) == 24:
+                if cpu_board.hit_points == 0:
                     print('You won!')
                     ships_remaining = False
                 else:
@@ -125,7 +125,7 @@ class Battleships:
                 print('\n')
                 next_turn = 'player'
 
-                if len(player_board.hits) == 24:
+                if player_board.hit_points == 0:
                     print('You lost!')
                     ships_remaining = False
                 else:

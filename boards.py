@@ -20,6 +20,7 @@ class Board:
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
         ]
         self.hits = []
+        self.hit_points = 0
 
     def print(self):
         print('   A B C D E F G H I J')
@@ -65,6 +66,8 @@ class Board:
             # If there were no collisions above, we can now place the ship
             for (x, y) in ship_coords:
                 self.contents[x][y] = 's'  # Place this co-ord for the ship
+
+            self.hit_points += ship.size
 
         except (ShipOffBoardError, CollisionError):
             self.randomly_place_ship(ship)  # Try placing again
