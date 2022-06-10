@@ -6,11 +6,9 @@ def random_orientation():
 
 
 class Ship:
-    def __init__(self):
-        self.size = Null
-
     def __str__(self):
-        return '<' + ('=' * (self.size - 1))
+        if hasattr(self, 'size'):
+            return '<' + ('=' * (self.size - 1))
 
 
 class Carrier(Ship):

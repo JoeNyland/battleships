@@ -7,10 +7,12 @@ from boards import Board
 
 
 class Battleships:
-    def col_to_index(self, col):
+    @staticmethod
+    def col_to_index(col):
         return "ABCDEFGHIJ".find(col)
 
-    def index_to_col(self, index):
+    @staticmethod
+    def index_to_col(index):
         return "ABCDEFGHIJ"[index]
 
     def validate_aim(self, aim):
@@ -24,7 +26,7 @@ class Battleships:
         x, y = list(aim)
         x = self.col_to_index(x)
         y = int(y) - 1
-        return (x, y)
+        return x, y
 
     def coords_to_aim(self, coords):
         x, y = coords
@@ -41,7 +43,8 @@ class Battleships:
             print('Please enter valid co-ordinates')
             return self.request_aim_coords()
 
-    def fire(self, board, coords):
+    @staticmethod
+    def fire(board, coords):
         if board.get_coords(coords) == 's':
             return 'hit'
         elif board.get_coords(coords) == 'X':
@@ -49,6 +52,7 @@ class Battleships:
         else:
             return 'miss'
 
+    @staticmethod
     def play():
         game = Battleships()
 

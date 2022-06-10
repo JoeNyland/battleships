@@ -33,17 +33,16 @@ class Board:
         row_index = random_choice(range(len(self.contents)))
         row = self.contents[row_index]
         column_index = random_choice(range(len(row)))
-        return (row_index, column_index)
+        return row_index, column_index
 
     def randomly_place_ship(self, ship):
         try:
             # Randomly choose where to start placing ship and its orientation
             (start_row_index, start_column_index) = self.random_coords()
-            start_row = self.contents[start_row_index]
             orientation = random_ship_orientation()
             ship_coords = [(start_column_index, start_row_index)]
             current_row_index, current_column_index = (start_row_index, start_column_index)
-            for x in ['s'] * (ship.size - 1):
+            for _ in ['s'] * (ship.size - 1):
                 if orientation == 'north-south':
                     current_column_index += 1
                 else:
@@ -65,7 +64,7 @@ class Board:
                     raise CollisionError("There's already a ship at ({},{})".format(x, y))
                 self.contents[x][y] = 's'  # Place this co-ord for the ship
 
-        except (ShipOffBoardError, CollisionError) as e:
+        except (ShipOffBoardError, CollisionError):
             self.randomly_place_ship(ship)  # Try placing again
 
     def mark_hit(self, coords):
