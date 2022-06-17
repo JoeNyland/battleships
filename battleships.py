@@ -3,9 +3,6 @@ from errors import InvalidInputError
 from boards import Board
 
 
-# TODO: Remove print()s
-
-
 class Battleships:
     @staticmethod
     def col_to_index(col):
