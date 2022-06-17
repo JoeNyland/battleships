@@ -67,10 +67,6 @@ class Battleships:
         for ship in cpu_ships:
             cpu_board.randomly_place_ship(ship)
 
-        print("CPU board:")
-        cpu_board.print()
-        print("\n")
-
         player_board = Board()
         player_ships = [
             Carrier(),  # 5 long
