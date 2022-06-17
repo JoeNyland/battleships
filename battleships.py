@@ -82,11 +82,10 @@ class Battleships:
         for ship in player_ships:
             player_board.randomly_place_ship(ship)
 
-        print("Player board:")
+        print("Your board:")
         player_board.print()
-        print("\n")
 
-        print("\nReady to play!")
+        print("Ready to play!")
 
         ships_remaining = True
         next_turn = 'player'
@@ -95,6 +94,7 @@ class Battleships:
             if next_turn == 'player':
                 aim_coords = game.request_aim_coords()
                 shot_result = game.fire(cpu_board, aim_coords)
+                print('\n')
                 if shot_result == 'hit':
                     print("It's a hit!")
                     cpu_board.mark_hit(aim_coords)
@@ -102,37 +102,33 @@ class Battleships:
                     print("You've already hit there.")
                 else:
                     print("You missed.")
-                print('\n')
                 next_turn = 'cpu'
 
                 if cpu_board.hit_points == 0:
                     print('You won!')
                     ships_remaining = False
-                else:
-                    print("CPU board:")
-                    cpu_board.print()
+                print('\n')
             else:
                 aim_coords = player_board.random_coords()
                 print("CPU fires at {}!".format(game.coords_to_aim(aim_coords)))
                 shot_result = game.fire(player_board, aim_coords)
+                print('\n')
                 if shot_result == 'hit':
                     print("The CPU hit one of your ships!")
                     player_board.mark_hit(aim_coords)
-                elif shot_result == 'already hit':
-                    print("The CPU has already hit there.")
                 else:
                     print("The CPU missed.")
-                print('\n')
                 next_turn = 'player'
 
                 if player_board.hit_points == 0:
                     print('You lost!')
                     ships_remaining = False
                 else:
+                    print('\n')
                     print("Player board:")
                     player_board.print()
-
-            print("\n")
+                print('\n')
+        print('GAME OVER')
 
 
 if __name__ == "__main__":
