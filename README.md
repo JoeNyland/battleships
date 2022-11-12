@@ -24,3 +24,5 @@ Your board:
    A B C D E F G H I J
 Ready to play!
 ```
+
+Note: This game is designed to run under Python 3.
